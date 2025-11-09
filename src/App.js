@@ -16,9 +16,6 @@ import Confetti from "react-confetti";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CheckIcon from "@mui/icons-material/CheckCircleOutline";
 
-// ------------------------------
-// Styled (nicht-standard) Buttons
-// ------------------------------
 const NiceButton = styled("button")(({ theme, color = "#1976d2" }) => ({
   background: `linear-gradient(90deg, ${color}, ${shadeColor(color, -25)})`,
   color: "#fff",
