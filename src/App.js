@@ -47,7 +47,7 @@ function shadeColor(hex, percent) {
   r = Math.max(Math.min(255, r), 0);
   g = Math.max(Math.min(255, g), 0);
   b = Math.max(Math.min(255, b), 0);
-  return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, "0")}`;
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
 // ------------------------------
@@ -150,7 +150,9 @@ export default function App() {
 
   // Zeit formatieren mm:ss
   const fmt = (s) => {
-    const m = Math.floor(s / 60).toString().padStart(2, "0");
+    const m = Math.floor(s / 60)
+      .toString()
+      .padStart(2, "0");
     const sec = (s % 60).toString().padStart(2, "0");
     return `${m}:${sec}`;
   };
@@ -172,13 +174,7 @@ export default function App() {
     >
       {/* Confetti (sichtbar, groß) */}
       {celebrate && (
-        <Confetti
-          width={viewport.w}
-          height={viewport.h}
-          numberOfPieces={700}
-          recycle={false}
-          gravity={0.25}
-        />
+        <Confetti width={viewport.w} height={viewport.h} numberOfPieces={700} recycle={false} gravity={0.25} />
       )}
 
       {/* Rechts oben - Panel mit Zeit & Stats */}
@@ -214,9 +210,7 @@ export default function App() {
         <Typography variant="subtitle2" sx={{ fontWeight: 700, color: "error.main" }}>
           ❌ Falsch
         </Typography>
-        <Typography variant="h6">
-          {wrong}
-        </Typography>
+        <Typography variant="h6">{wrong}</Typography>
       </Paper>
 
       {/* Hauptbereich: Aufgaben-Card + Sidebar */}
@@ -287,7 +281,9 @@ export default function App() {
                 />
                 <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
                   <Typography variant="body2">Gesamt: {total}</Typography>
-                  <Typography variant="body2">Treffer: {total > 0 ? Math.round((correct / total) * 100) : 0}%</Typography>
+                  <Typography variant="body2">
+                    Treffer: {total > 0 ? Math.round((correct / total) * 100) : 0}%
+                  </Typography>
                 </Box>
               </Box>
             </Box>
@@ -320,7 +316,7 @@ export default function App() {
             )}
 
             <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-              <NiceButton
+              {/*<NiceButton
                 color="#ed6c02"
                 onClick={() => {
                   // Reset Statistik (beibehaltung current task)
@@ -333,9 +329,14 @@ export default function App() {
                 Statistik zurücksetzen
               </NiceButton>
 
-              <NiceButton color="#9c27b0" onClick={() => { setElapsed(0); }}>
+              <NiceButton
+                color="#9c27b0"
+                onClick={() => {
+                  setElapsed(0);
+                }}
+              >
                 Reset Timer
-              </NiceButton>
+              </NiceButton>*/}
             </Box>
           </Paper>
         </Grid>
