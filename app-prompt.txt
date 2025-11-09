@@ -1,7 +1,25 @@
-Schreibe mir eine Applikation für Mathematikübungen für natürliche Zahlen bis 100, Addition und Subtraktion. Es sollte eine React App sein und generiert sollte eine einzelne App.js Datei mit ganzer Logik.
+Schreibe mir eine Applikation für Mathematikübungen mit den natürlichen Zahlen bis 100, die Addition und Subtraktion abdeckt. Die App soll als React-Anwendung umgesetzt werden, wobei die gesamte Logik in einer einzigen App.js-Datei enthalten ist.
 
-Es sollte ein ansprechendes Design bieten, e.g. Material UI und nicht standard Button-Style. Verwende Icons + Text als Button-Labels. Widgets sollten nicht zu nah beieinnander sein. Es sollte für mobile Devices optimiert sein, wie Tablets und sollte auch bedienbar sein, wenn System-Tastatur ausgefahren ist (von unten) und ca. 1/3 vom Bildschirm einnimmt. Bei einer korrekten Aufgabenlösung sollte eine Belohnungsanimation erscheinen, die klar sichtbar ist. Ergebnisfeld sollte immer im Focus bleiben, so dass Tastatureingabe möglich ist.
+Die App soll ein ansprechendes Design bieten, z. B. mit Material UI und nicht den Standard-Button-Stil. Die Buttons sollen Icons und Text als Labels enthalten. Widgets sollten ausreichend Abstand zueinander haben, sodass das Layout luftig bleibt.
 
-Die 2 Zahlen sollten zufällig generiert werden und das Ergebnis muss eingegeben werden. Man muss auch den Fortschritt sehen können wenn man mit der Übung am Anfang startet, d.h. man muss sehen wieviele Aufgaben schon fertig gemacht wurden und wieviele davon richtig und falsch sind. Beschreibung für richtige und falsche Anzeige sollten entsprechende Emojis enthalten. Die Zeit, die dafür benötigt wurde sollte auch getrackt werden. Keine negative Ergebnisse sind erlaubt.
+Die Anwendung soll für mobile Geräte optimiert sein, insbesondere für Tablets. Sie muss auch dann bedienbar sein, wenn die System-Tastatur geöffnet ist und etwa ein Drittel des Bildschirms einnimmt.
 
-Die falschen Ergebnisse sollten getrackt werden und in einer Liste nachgeführt werden. Man muss auf so einen inkorrekten Eintrag clicken können und dann kann man die AUfgabe nochmal machen, das sollte dann in der Liste entsprechend markiert werden.
+Bei einer korrekten Lösung einer Aufgabe soll eine deutliche Belohnungsanimation erscheinen.
+
+Das Eingabefeld für das Ergebnis soll immer im Fokus bleiben, sodass die Tastatureingabe sofort möglich ist.
+
+Die beiden Zahlen sollen zufällig generiert werden, und der Benutzer muss das Ergebnis eingeben.
+
+Der Fortschritt der Übung muss sichtbar sein: Anzahl der bearbeiteten Aufgaben, richtig beantwortete und falsch beantwortete Aufgaben. Für die Anzeige von richtigen und falschen Antworten sollen passende Emojis verwendet werden.
+
+Die benötigte Zeit für die Übungen soll ebenfalls getrackt werden.
+
+Bei Subtraktionsaufgaben sollen keine negativen Ergebnisse vorkommen.
+
+Die App soll außerdem eine Liste der falschen Ergebnisse führen:
+
+Jeder falsche Eintrag ist klickbar, sodass die Aufgabe erneut bearbeitet werden kann.
+
+Wenn eine Aufgabe nach Wiederholung korrekt gelöst wird, soll sich die Farbe des Listeneintrags ändern, um den Unterschied zu markieren.
+
+In der Liste der falschen Ergebnisse soll das richtige Ergebnis nicht angezeigt werden.

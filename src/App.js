@@ -30,7 +30,6 @@ function App() {
     answerRef.current.focus();
   }, [question]);
 
-  // Generiere neue Frage, keine negativen Ergebnisse
   function generateQuestion() {
     const op = Math.random() < 0.5 ? "+" : "-";
     let a, b;
@@ -39,35 +38,9 @@ function App() {
       b = Math.floor(Math.random() * 101);
     } else {
       a = Math.floor(Math.random() * 101);
-      b = Math.floor(Math.random() * (a + 1)); // b <= a
+      b = Math.floor(Math.random() * (a + 1)); // Keine negativen Ergebnisse
     }
     return { a, b, op };
-  }
-
-  function handleSubmit() {
-    if (answer === "") return;
-    const userAnswer = parseInt(answer);
-    const correctAnswer = question.op === "+" ? question.a + question.b : question.a - question.b;
-
-    if (userAnswer === correctAnswer) {
-      setCorrectCount(correctCount + 1);
-      setShowConfetti(true);
-      setFlashColor(true);
-      spawnStars();
-      setTimeout(() => {
-        setShowConfetti(false);
-        setFlashColor(false);
-      }, 2000);
-    } else {
-      setWrongAnswers([...wrongAnswers, { ...question, userAnswer, repeat: false }]);
-    }
-
-    setQuestion(generateQuestion());
-    setAnswer("");
-  }
-
-  function handleKeyPress(e) {
-    if (e.key === "Enter") handleSubmit();
   }
 
   function spawnStars() {
@@ -81,12 +54,59 @@ function App() {
     setTimeout(() => setStars([]), 1500);
   }
 
+  function markCorrected(index) {
+    const newList = [...wrongAnswers];
+    newList[index].corrected = true;
+    newList[index].repeat = false;
+    setWrongAnswers(newList);
+  }
+
   function handleRepeat(index) {
     const item = wrongAnswers[index];
     setQuestion({ a: item.a, b: item.b, op: item.op });
+
     const newList = [...wrongAnswers];
     newList[index].repeat = true;
     setWrongAnswers(newList);
+  }
+
+  function handleSubmit() {
+    if (answer === "") return;
+    const userAnswer = parseInt(answer);
+    const correctAnswer = question.op === "+" ? question.a + question.b : question.a - question.b;
+
+    // Prüfe, ob die aktuelle Frage aus der falschen Liste kommt
+    const repeatIndex = wrongAnswers.findIndex(
+      (item) => item.repeat && item.a === question.a && item.b === question.b && item.op === question.op
+    );
+
+    if (userAnswer === correctAnswer) {
+      setCorrectCount(correctCount + 1);
+      setShowConfetti(true);
+      setFlashColor(true);
+      spawnStars();
+      setTimeout(() => {
+        setShowConfetti(false);
+        setFlashColor(false);
+      }, 2000);
+
+      // Wenn es eine wiederholte Aufgabe war, markiere sie als korrigiert
+      if (repeatIndex !== -1) {
+        markCorrected(repeatIndex);
+      }
+    } else {
+      // Wenn die Aufgabe nicht bereits in der falschen Liste ist, hinzufügen
+      if (repeatIndex === -1) {
+        setWrongAnswers([...wrongAnswers, { ...question, userAnswer, repeat: false, corrected: false }]);
+      }
+    }
+
+    setQuestion(generateQuestion());
+    setAnswer("");
+  }
+
+  function handleKeyPress(e) {
+    if (e.key === "Enter") handleSubmit();
   }
 
   return (
@@ -192,20 +212,18 @@ function App() {
               <Button
                 key={index}
                 onClick={() => handleRepeat(index)}
-                variant={item.repeat ? "outlined" : "contained"}
-                color={item.repeat ? "secondary" : "error"}
+                variant={item.corrected ? "outlined" : "contained"}
+                color={item.corrected ? "secondary" : "error"}
                 startIcon={<CancelIcon />}
                 sx={{ m: 0.5, minWidth: "150px", justifyContent: "flex-start", textTransform: "none" }}
               >
-                {item.a} {item.op} {item.b} = {item.op === "+" ? item.a + item.b : item.a - item.b} | Dein Ergebnis:{" "}
-                {item.userAnswer}
+                {item.a} {item.op} {item.b} | Dein Ergebnis: {item.userAnswer}
               </Button>
             ))}
           </Paper>
         )}
       </Paper>
 
-      {/* Sterne Animation */}
       <style>
         {`
           @keyframes fall {
