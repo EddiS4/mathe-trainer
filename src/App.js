@@ -202,7 +202,7 @@ function App() {
           <Typography>
             ✅ Richtig: {correctCount} | ❌ Falsch: {wrongAnswers.length} | Gesamt: {correctCount + wrongAnswers.length}
           </Typography>
-          <Typography sx={{ mt: 1 }}>⏱ Zeit: {formatTime(elapsedTime)}s</Typography>
+          <Typography sx={{ mt: 1 }}>⏱ Zeit: {formatTime(elapsedTime)}</Typography>
           <LinearProgress
             variant="determinate"
             value={
