@@ -1,6 +1,6 @@
-Schreibe mir eine Applikation für Mathematikübungen mit den natürlichen Zahlen bis 100, die Addition und Subtraktion abdeckt. Die App soll als React-Anwendung umgesetzt werden, wobei die gesamte Logik in einer einzigen App.js-Datei enthalten ist.
+Schreibe mir eine Applikation für Mathematikübungen mit den natürlichen Zahlen bis 100, die Addition und Subtraktion abdeckt. Addition und Subtraktion Operationen sollten abwechselnd gemacht werden. Bei Subtraktionsaufgaben sollen keine negativen Ergebnisse vorkommen. Die App soll als React-Anwendung umgesetzt werden, wobei die gesamte Logik in einer einzigen App.js-Datei enthalten ist.
 
-Die App soll ein ansprechendes Design bieten, z. B. mit Material UI und nicht den Standard-Button-Stil. Die Buttons sollen Icons und Text als Labels enthalten. Widgets sollten ausreichend Abstand zueinander haben, sodass das Layout luftig bleibt.
+Die App soll ein ansprechendes Design bieten, z.B. mit Material UI und nicht den Standard-Button-Stil. Die Buttons sollen grundsätzlich Icons und Text als Labels enthalten. Widgets sollten ausreichend Abstand zueinander haben, sodass das Layout luftig bleibt. Anzahl an Eingabeelementen sollte eingegrenzt werden, nur ein Button zum Prüfen von Ergebnissen. Reset wird sonst duch das Neuladen der Seite durchgeführt. Es braucht kein Button zum Pausieren oder neue Aufgabe anzufordern.
 
 Die Anwendung soll für mobile Geräte optimiert sein, insbesondere für Tablets. Sie muss auch dann bedienbar sein, wenn die System-Tastatur geöffnet ist und etwa ein Drittel des Bildschirms einnimmt.
 
@@ -8,18 +8,12 @@ Bei einer korrekten Lösung einer Aufgabe soll eine deutliche Belohnungsanimatio
 
 Das Eingabefeld für das Ergebnis soll immer im Fokus bleiben, sodass die Tastatureingabe sofort möglich ist.
 
-Die beiden Zahlen sollen zufällig generiert werden, und der Benutzer muss das Ergebnis eingeben.
+Die beiden Zahlen sollen zufällig generiert werden, und der Benutzer muss das Ergebnis eingeben. Die beiden Eingabezahlen und das Ergebnis sollten wie eine Gleicung dargestellt werden, mit einem "=".
 
 Der Fortschritt der Übung muss sichtbar sein: Anzahl der bearbeiteten Aufgaben, richtig beantwortete und falsch beantwortete Aufgaben. Für die Anzeige von richtigen und falschen Antworten sollen passende Emojis verwendet werden.
 
-Die benötigte Zeit für die Übungen soll ebenfalls getrackt werden.
+Die benötigte Zeit für die Übungen soll ebenfalls getrackt werden. Die Zeit sollte in Minuten und Sekunden angezeigt werden.
 
-Bei Subtraktionsaufgaben sollen keine negativen Ergebnisse vorkommen.
+Die App soll außerdem eine Liste der falschen Ergebnisse führen. Jeder falsche Eintrag ist klickbar, sodass die Aufgabe erneut bearbeitet werden kann. Wenn eine Aufgabe nach Wiederholung korrekt gelöst wird, soll sich die Farbe des Listeneintrags ändern, um den Unterschied zu markieren. In der Liste der falschen Ergebnisse soll das richtige Ergebnis nicht angezeigt werden.
 
-Die App soll außerdem eine Liste der falschen Ergebnisse führen:
-
-Jeder falsche Eintrag ist klickbar, sodass die Aufgabe erneut bearbeitet werden kann.
-
-Wenn eine Aufgabe nach Wiederholung korrekt gelöst wird, soll sich die Farbe des Listeneintrags ändern, um den Unterschied zu markieren.
-
-In der Liste der falschen Ergebnisse soll das richtige Ergebnis nicht angezeigt werden.
+Benutze ChatGPT 4 Modell.

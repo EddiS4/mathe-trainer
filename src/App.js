@@ -43,6 +43,14 @@ function App() {
     return { a, b, op };
   }
 
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
   function spawnStars() {
     const newStars = Array.from({ length: 5 }, (_, i) => ({
       id: Date.now() + i,
@@ -141,14 +149,14 @@ function App() {
           </Box>
         ))}
 
-        <Typography variant="h4" gutterBottom align="center">
+        <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: "bold" }}>
           Mathematik-Trainer 🎯
         </Typography>
 
         {/* Frage */}
         <Box display="flex" justifyContent="center" my={3}>
           <Paper sx={{ p: 3, minWidth: 200, textAlign: "center", boxShadow: 4 }}>
-            <Typography variant="h5">
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               {question.a} {question.op} {question.b} = ?
             </Typography>
           </Paper>
@@ -194,7 +202,7 @@ function App() {
           <Typography>
             ✅ Richtig: {correctCount} | ❌ Falsch: {wrongAnswers.length} | Gesamt: {correctCount + wrongAnswers.length}
           </Typography>
-          <Typography>⏱ Zeit: {elapsedTime}s</Typography>
+          <Typography sx={{ mt: 1 }}>⏱ Zeit: {formatTime(elapsedTime)}s</Typography>
           <LinearProgress
             variant="determinate"
             value={
