@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container, Typography, Paper, Box, Button, LinearProgress } from "@mui/material";
+import { Container, Typography, Paper, Box, Button, LinearProgress, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Confetti from "react-confetti";
@@ -14,6 +14,7 @@ function App() {
   const [stars, setStars] = useState([]);
   const [startTime, setStartTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [showKeypad, setShowKeypad] = useState(false);
 
   const answerRef = useRef(null);
 
@@ -25,20 +26,32 @@ function App() {
     return () => clearInterval(timer);
   }, [startTime]);
 
-  // Fokus auf Eingabe
+  // Always show on-screen keypad
   useEffect(() => {
-    answerRef.current.focus();
-  }, [question]);
+    setShowKeypad(true);
+  }, []);
+
+  // Fokus auf Eingabe (only focus if not forcing readOnly)
+  useEffect(() => {
+    if (!showKeypad && answerRef.current) answerRef.current.focus();
+  }, [question, showKeypad]);
 
   function generateQuestion() {
-    const op = Math.random() < 0.5 ? "+" : "-";
-    let a, b;
-    if (op === "+") {
+    const rand = Math.random();
+    let op, a, b;
+
+    if (rand < 0.33) {
+      op = "+";
       a = Math.floor(Math.random() * 101);
       b = Math.floor(Math.random() * 101);
-    } else {
+    } else if (rand < 0.66) {
+      op = "-";
       a = Math.floor(Math.random() * 101);
       b = Math.floor(Math.random() * (a + 1)); // Keine negativen Ergebnisse
+    } else {
+      op = "×";
+      a = Math.floor(Math.random() * 10); // Single digit (0-9)
+      b = Math.floor(Math.random() * 10); // Single digit (0-9)
     }
     return { a, b, op };
   }
@@ -79,9 +92,16 @@ function App() {
   }
 
   function handleSubmit() {
-    if (answer === "") return;
-    const userAnswer = parseInt(answer);
-    const correctAnswer = question.op === "+" ? question.a + question.b : question.a - question.b;
+    if (answer === "" || answer === "-") return;
+    const userAnswer = parseInt(answer, 10);
+    let correctAnswer;
+    if (question.op === "+") {
+      correctAnswer = question.a + question.b;
+    } else if (question.op === "-") {
+      correctAnswer = question.a - question.b;
+    } else if (question.op === "×") {
+      correctAnswer = question.a * question.b;
+    }
 
     // Prüfe, ob die aktuelle Frage aus der falschen Liste kommt
     const repeatIndex = wrongAnswers.findIndex(
@@ -89,7 +109,7 @@ function App() {
     );
 
     if (userAnswer === correctAnswer) {
-      setCorrectCount(correctCount + 1);
+      setCorrectCount((c) => c + 1);
       setShowConfetti(true);
       setFlashColor(true);
       spawnStars();
@@ -105,7 +125,7 @@ function App() {
     } else {
       // Wenn die Aufgabe nicht bereits in der falschen Liste ist, hinzufügen
       if (repeatIndex === -1) {
-        setWrongAnswers([...wrongAnswers, { ...question, userAnswer, repeat: false, corrected: false }]);
+        setWrongAnswers((prev) => [...prev, { ...question, userAnswer, repeat: false, corrected: false }]);
       }
     }
 
@@ -115,6 +135,30 @@ function App() {
 
   function handleKeyPress(e) {
     if (e.key === "Enter") handleSubmit();
+  }
+
+  // Keypad handling
+  function handleKeypadInput(key) {
+    setAnswer((prev) => {
+      if (key === "clear") return "";
+      if (key === "del") return prev.slice(0, -1);
+      if (key === "sign") {
+        if (!prev) return "-";
+        return prev.startsWith("-") ? prev.slice(1) : "-" + prev;
+      }
+      if (key === "enter") {
+        // use current value (submit handled outside setState), return prev unchanged
+        setTimeout(() => handleSubmit(), 0);
+        return prev;
+      }
+      // digits
+      if (key >= "0" && key <= "9") {
+        // Prevent leading zeros like "00"
+        if (prev === "0") return key;
+        return (prev || "") + key;
+      }
+      return prev;
+    });
   }
 
   return (
@@ -165,36 +209,204 @@ function App() {
         {/* Eingabe */}
         <Box display="flex" justifyContent="center" gap={2} mb={3} flexWrap="wrap">
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             onKeyDown={handleKeyPress}
             ref={answerRef}
+            readOnly={showKeypad}
+            aria-label="Antwort"
             style={{
               padding: "10px 15px",
               fontSize: "1.2rem",
               borderRadius: "8px",
               border: "2px solid #1976d2",
-              width: "150px",
+              width: "360px",
               textAlign: "center",
+              backgroundColor: showKeypad ? "#fafafa" : undefined,
             }}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            startIcon={<CheckCircleIcon />}
-            sx={{
-              fontSize: "1.1rem",
-              padding: "10px 20px",
-              borderRadius: "10px",
-              transition: "all 0.2s ease",
-              "&:hover": { transform: "scale(1.05)" },
-            }}
-          >
-            Prüfen
-          </Button>
         </Box>
+
+        {/* On-screen numpad for touch/tablet */}
+        {showKeypad && (
+          <Box sx={{ mt: 3, mb: 2, display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "100%", maxWidth: 400 }}>
+              <Grid container spacing={1}>
+                <Grid item size={12}>
+                  <Button
+                    fullWidth
+                    onClick={handleSubmit}
+                    variant="contained"
+                    sx={{
+                      height: 60,
+                      fontSize: "1.1rem",
+                      fontWeight: "bold",
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      background: "linear-gradient(135deg, #da70d6 0%, #ff6b9d 100%)",
+                      "&:hover": { background: "linear-gradient(135deg, #c855c1 0%, #dd5a8a 100%)" },
+                      "&:active": { transform: "scale(0.95)" },
+                      color: "white",
+                      padding: 0,
+                    }}
+                    disabled={answer === "" || answer === "-"}
+                  >
+                    Antwort Prüfen
+                  </Button>
+                </Grid>
+
+                {[1, 2, 3].map((num) => (
+                  <Grid item size={4} key={num}>
+                    <Button
+                      fullWidth
+                      onClick={() => handleKeypadInput(num.toString())}
+                      variant="contained"
+                      sx={{
+                        height: 60,
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        borderRadius: "12px",
+                        textTransform: "none",
+                        background: "linear-gradient(135deg, #4da6ff 0%, #2980ff 100%)",
+                        "&:hover": { background: "linear-gradient(135deg, #2980ff 0%, #1e5fa0 100%)" },
+                        "&:active": { transform: "scale(0.95)" },
+                        color: "white",
+                        padding: 0,
+                      }}
+                    >
+                      {num}
+                    </Button>
+                  </Grid>
+                ))}
+                {/* Row 2: 4 5 6 */}
+                {[4, 5, 6].map((num) => (
+                  <Grid item size={4} key={num}>
+                    <Button
+                      fullWidth
+                      onClick={() => handleKeypadInput(num.toString())}
+                      variant="contained"
+                      sx={{
+                        height: 60,
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        borderRadius: "12px",
+                        textTransform: "none",
+                        background: "linear-gradient(135deg, #4da6ff 0%, #2980ff 100%)",
+                        "&:hover": { background: "linear-gradient(135deg, #2980ff 0%, #1e5fa0 100%)" },
+                        "&:active": { transform: "scale(0.95)" },
+                        color: "white",
+                        padding: 0,
+                      }}
+                    >
+                      {num}
+                    </Button>
+                  </Grid>
+                ))}
+                {/* Row 3: 7 8 9 */}
+                {[7, 8, 9].map((num) => (
+                  <Grid item size={4} key={num}>
+                    <Button
+                      fullWidth
+                      onClick={() => handleKeypadInput(num.toString())}
+                      variant="contained"
+                      sx={{
+                        height: 60,
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        borderRadius: "12px",
+                        textTransform: "none",
+                        background: "linear-gradient(135deg, #4da6ff 0%, #2980ff 100%)",
+                        "&:hover": { background: "linear-gradient(135deg, #2980ff 0%, #1e5fa0 100%)" },
+                        "&:active": { transform: "scale(0.95)" },
+                        color: "white",
+                        padding: 0,
+                      }}
+                    >
+                      {num}
+                    </Button>
+                  </Grid>
+                ))}
+
+                <Grid item size={4}>
+                  <Button
+                    fullWidth
+                    onClick={() => handleKeypadInput("clear")}
+                    variant="contained"
+                    sx={{
+                      height: 60,
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      background: "linear-gradient(135deg, #ff9933 0%, #ff7700 100%)",
+                      "&:hover": { background: "linear-gradient(135deg, #ff7700 0%, #dd6600 100%)" },
+                      "&:active": { transform: "scale(0.95)" },
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 0.5,
+                      padding: 0,
+                    }}
+                  >
+                    <span>✕</span> Löschen
+                  </Button>
+                </Grid>
+
+                <Grid item size={4}>
+                  <Button
+                    fullWidth
+                    onClick={() => handleKeypadInput("0")}
+                    variant="contained"
+                    sx={{
+                      height: 60,
+                      fontSize: "1.2rem",
+                      fontWeight: "bold",
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      background: "linear-gradient(135deg, #4da6ff 0%, #2980ff 100%)",
+                      "&:hover": { background: "linear-gradient(135deg, #2980ff 0%, #1e5fa0 100%)" },
+                      "&:active": { transform: "scale(0.95)" },
+                      color: "white",
+                      padding: 0,
+                    }}
+                  >
+                    0
+                  </Button>
+                </Grid>
+
+                {/* Row 3: Delete | Submit */}
+                <Grid item size={4}>
+                  <Button
+                    fullWidth
+                    onClick={() => handleKeypadInput("del")}
+                    variant="contained"
+                    sx={{
+                      height: 60,
+                      fontSize: "1.2rem",
+                      fontWeight: "bold",
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      background: "linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)",
+                      "&:hover": { background: "linear-gradient(135deg, #ee5a52 0%, #cc4444 100%)" },
+                      "&:active": { transform: "scale(0.95)" },
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 0,
+                    }}
+                    aria-label="Löschen"
+                  >
+                    ⌫
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        )}
 
         {/* Fortschritt */}
         <Box>
