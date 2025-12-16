@@ -40,18 +40,22 @@ function App() {
     const rand = Math.random();
     let op, a, b;
 
-    if (rand < 0.33) {
+    if (rand < 0.25) {
       op = "+";
       a = Math.floor(Math.random() * 101);
       b = Math.floor(Math.random() * 101);
-    } else if (rand < 0.66) {
+    } else if (rand < 0.5) {
       op = "-";
       a = Math.floor(Math.random() * 101);
       b = Math.floor(Math.random() * (a + 1)); // Keine negativen Ergebnisse
-    } else {
+    } else if (rand < 0.75) {
       op = "×";
       a = Math.floor(Math.random() * 10); // Single digit (0-9)
       b = Math.floor(Math.random() * 10); // Single digit (0-9)
+    } else {
+      op = "÷";
+      b = Math.floor(Math.random() * 9) + 1; // Single digit (1-9), avoid division by zero
+      a = b * Math.floor(Math.random() * 11); // First number <= 100
     }
     return { a, b, op };
   }
@@ -101,6 +105,8 @@ function App() {
       correctAnswer = question.a - question.b;
     } else if (question.op === "×") {
       correctAnswer = question.a * question.b;
+    } else if (question.op === "÷") {
+      correctAnswer = question.a / question.b;
     }
 
     // Prüfe, ob die aktuelle Frage aus der falschen Liste kommt
