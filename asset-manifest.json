@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/mathe-trainer/static/css/main.e6c13ad2.css",
-    "main.js": "/mathe-trainer/static/js/main.ab330d89.js",
+    "main.js": "/mathe-trainer/static/js/main.6242b255.js",
     "static/js/453.b1759fd7.chunk.js": "/mathe-trainer/static/js/453.b1759fd7.chunk.js",
     "index.html": "/mathe-trainer/index.html",
     "main.e6c13ad2.css.map": "/mathe-trainer/static/css/main.e6c13ad2.css.map",
-    "main.ab330d89.js.map": "/mathe-trainer/static/js/main.ab330d89.js.map",
+    "main.6242b255.js.map": "/mathe-trainer/static/js/main.6242b255.js.map",
     "453.b1759fd7.chunk.js.map": "/mathe-trainer/static/js/453.b1759fd7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.ab330d89.js"
+    "static/js/main.6242b255.js"
   ]
 }
