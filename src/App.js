@@ -59,17 +59,12 @@ function App() {
       b = randomInt(10, a);
     } else if (rand < 0.85) {
       op = "×";
-      if (Math.random() < 0.7) {
-        a = randomInt(10, 99);
-        b = randomInt(2, 9);
-      } else {
-        a = randomInt(10, 99);
-        b = randomInt(10, 99);
-      }
+      a = randomInt(1, 10);
+      b = randomInt(1, 10);
     } else {
       op = "÷";
-      const divisor = randomInt(2, 12);
-      const quotient = randomInt(3, 99);
+      const divisor = randomInt(1, 10);
+      const quotient = randomInt(1, 10);
       a = divisor * quotient;
       b = divisor;
     }
