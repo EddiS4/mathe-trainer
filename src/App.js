@@ -36,27 +36,44 @@ function App() {
     if (!showKeypad && answerRef.current) answerRef.current.focus();
   }, [question, showKeypad]);
 
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   function generateQuestion() {
     const rand = Math.random();
     let op, a, b;
 
-    if (rand < 0.25) {
+    if (rand < 0.35) {
       op = "+";
-      a = Math.floor(Math.random() * 101);
-      b = Math.floor(Math.random() * 101);
-    } else if (rand < 0.5) {
+      const useThreeDigits = Math.random() < 0.6;
+      const min = useThreeDigits ? 100 : 10;
+      const max = useThreeDigits ? 999 : 99;
+      a = randomInt(min, max);
+      b = randomInt(min, max);
+    } else if (rand < 0.7) {
       op = "-";
-      a = Math.floor(Math.random() * 101);
-      b = Math.floor(Math.random() * (a + 1)); // Keine negativen Ergebnisse
-    } else if (rand < 0.75) {
+      const useThreeDigits = Math.random() < 0.5;
+      const maxA = useThreeDigits ? 999 : 99;
+      a = randomInt(10, maxA);
+      b = randomInt(10, a);
+    } else if (rand < 0.85) {
       op = "×";
-      a = Math.floor(Math.random() * 10); // Single digit (0-9)
-      b = Math.floor(Math.random() * 10); // Single digit (0-9)
+      if (Math.random() < 0.7) {
+        a = randomInt(10, 99);
+        b = randomInt(2, 9);
+      } else {
+        a = randomInt(10, 99);
+        b = randomInt(10, 99);
+      }
     } else {
       op = "÷";
-      b = Math.floor(Math.random() * 9) + 1; // Single digit (1-9), avoid division by zero
-      a = b * Math.floor(Math.random() * 11); // First number <= 100
+      const divisor = randomInt(2, 12);
+      const quotient = randomInt(3, 99);
+      a = divisor * quotient;
+      b = divisor;
     }
+
     return { a, b, op };
   }
 
@@ -111,7 +128,7 @@ function App() {
 
     // Prüfe, ob die aktuelle Frage aus der falschen Liste kommt
     const repeatIndex = wrongAnswers.findIndex(
-      (item) => item.repeat && item.a === question.a && item.b === question.b && item.op === question.op
+      (item) => item.repeat && item.a === question.a && item.b === question.b && item.op === question.op,
     );
 
     if (userAnswer === correctAnswer) {
